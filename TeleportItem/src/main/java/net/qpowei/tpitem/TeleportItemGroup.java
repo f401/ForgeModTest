@@ -5,8 +5,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 public class TeleportItemGroup extends ItemGroup {
+	public static final TeleportItemGroup GROUP = new TeleportItemGroup();
 
-	public TeleportItemGroup() {
+	private TeleportItemGroup() {
 		super("Teleport Item");
 	}
 
