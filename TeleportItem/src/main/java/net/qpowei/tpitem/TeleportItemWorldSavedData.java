@@ -3,6 +3,9 @@ package net.qpowei.tpitem;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
@@ -15,6 +18,7 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 
 	public static final String NAME = "TeleportItem_Localtions";
 	public ConcurrentHashMap<String, Location> pointsMap;
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public TeleportItemWorldSavedData() {
 		super(NAME);
@@ -23,7 +27,8 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 
 	public static TeleportItemWorldSavedData get(World worldIn) {
 		if (!(worldIn instanceof ServerWorld)) {
-			throw new RuntimeException("Attempted to get the data from a client world. This is wrong.");
+			LOGGER.error("Attempted to get the data from a client world. This is wrong. World: {}", worldIn);
+			return null;
 		}
 		ServerWorld overWorld = worldIn.getServer().getLevel(World.OVERWORLD);
 		DimensionSavedDataManager savedDataManager = overWorld.getDataStorage();
@@ -31,10 +36,11 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 	}
 
 	public void put(String name, BlockPos pos, RegistryKey<World> dimension) {
-		pointsMap.put(name, new Location(pos, dimension));
+		put(name, new Location(pos, dimension));
 	}
 
 	public void put(String name, Location location) {
+		LOGGER.info("Put {}: {}", name, location);
 		pointsMap.put(name, location);
 	}
 
@@ -44,6 +50,7 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 
 	@Override
 	public void load(CompoundNBT root) {
+		LOGGER.info("Loading Points");
 		for (String name : root.getAllKeys()) {
 			pointsMap.put(name, new Location(root.getCompound(name)));
 		}
@@ -51,6 +58,7 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 
 	@Override
 	public CompoundNBT save(CompoundNBT pCompound) {
+		LOGGER.info("Saving Points");
 		for (Map.Entry<String, Location> entry : pointsMap.entrySet()) {
 			pCompound.put(entry.getKey(), entry.getValue().serializeNBT());
 		}

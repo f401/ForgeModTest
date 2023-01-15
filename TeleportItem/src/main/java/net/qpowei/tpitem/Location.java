@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class Location implements INBTSerializable<CompoundNBT> {
+
 	private BlockPos pos;
 	private ResourceLocation dimension;
 
@@ -18,6 +19,11 @@ public class Location implements INBTSerializable<CompoundNBT> {
 
 	public Location(CompoundNBT nbt) {
 		deserializeNBT(nbt);
+	}
+
+	@Override
+	public String toString() {
+		return "Location [pos=" + pos + ", dimension=" + dimension + "]";
 	}
 
 	@Override

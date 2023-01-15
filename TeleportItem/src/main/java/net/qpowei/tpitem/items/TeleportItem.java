@@ -17,9 +17,8 @@ public class TeleportItem extends Item {
 
 	@Override
 	public ActionResult<ItemStack> use(World pLevel, PlayerEntity pPlayer, Hand pHand) {
-		if (pPlayer instanceof ServerPlayerEntity) {
-
-		}
+		if (!pLevel.isClientSide && pPlayer instanceof ServerPlayerEntity) {
+		} 
 		return super.use(pLevel, pPlayer, pHand);
 	}
 
