@@ -1,6 +1,7 @@
 package net.qpowei.tpitem.items;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -16,8 +17,10 @@ public class TeleportItem extends Item {
 
 	@Override
 	public ActionResult<ItemStack> use(World pLevel, PlayerEntity pPlayer, Hand pHand) {
-		return ActionResult.success(pPlayer.getItemInHand(pHand));
-	}
+		if (pPlayer instanceof ServerPlayerEntity) {
 
+		}
+		return super.use(pLevel, pPlayer, pHand);
+	}
 
 }
