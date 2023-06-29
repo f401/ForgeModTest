@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "tpitem:block/my_block"
+    }
+  }
+}

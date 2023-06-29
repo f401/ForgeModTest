@@ -1,10 +1,12 @@
 package net.qpowei.tpitem;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class Location implements INBTSerializable<CompoundNBT> {
@@ -19,6 +21,10 @@ public class Location implements INBTSerializable<CompoundNBT> {
 
 	public Location(CompoundNBT nbt) {
 		deserializeNBT(nbt);
+	}
+
+	public ServerWorld getWorld(MinecraftServer server) {
+		return TeleportItemMain.getWorldFromRes(server, dimension);
 	}
 
 	@Override

@@ -20,14 +20,15 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 	public ConcurrentHashMap<String, Location> pointsMap;
 	private static final Logger LOGGER = LogManager.getLogger();
 
-	public TeleportItemWorldSavedData() {
+	private TeleportItemWorldSavedData() {
 		super(NAME);
 		pointsMap = new ConcurrentHashMap<>();
 	}
 
 	public static TeleportItemWorldSavedData get(World worldIn) {
 		if (!(worldIn instanceof ServerWorld)) {
-			LOGGER.error("Attempted to get the data from a client world. This is wrong. World: {}", worldIn);
+			LOGGER.error("Attempted to get the data from a client world. This is wrong. World: {}",
+					worldIn);
 			return null;
 		}
 		ServerWorld overWorld = worldIn.getServer().getLevel(World.OVERWORLD);
@@ -35,14 +36,19 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 		return savedDataManager.computeIfAbsent(TeleportItemWorldSavedData::new, NAME);
 	}
 
+	public void put(String name, BlockPos pos, World world) {
+		put(name, pos, world.dimension());
+	}
+
 	public void put(String name, BlockPos pos, RegistryKey<World> dimension) {
 		put(name, new Location(pos, dimension));
 	}
-
+	
 	public void put(String name, Location location) {
 		LOGGER.info("Put {}: {}", name, location);
 		pointsMap.put(name, location);
 	}
+
 
 	public Location get(String name) {
 		return pointsMap.get(name);
@@ -51,9 +57,9 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 	@Override
 	public void load(CompoundNBT root) {
 		LOGGER.info("Loading Points");
-		for (String name : root.getAllKeys()) {
-			pointsMap.put(name, new Location(root.getCompound(name)));
-		}
+		root.getAllKeys().stream().map(
+				name -> pointsMap.put(name,
+						new Location(root.getCompound(name))));
 	}
 
 	@Override

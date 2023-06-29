@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -58,6 +60,13 @@ public class DataGen {
 
 		@Override
 		protected void registerStatesAndModels() {
+			reg(ItemRegistry.MY_BLOCK);
+		}
+
+		private <T extends Block> void reg(RegistryObject<T> reg) {
+			String name = reg.getId().getPath();
+			simpleBlock(reg.get());
+			itemModels().withExistingParent(name, modLoc("block/" + name));
 		}
 	}
 
