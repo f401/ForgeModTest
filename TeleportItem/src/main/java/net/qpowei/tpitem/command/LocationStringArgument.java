@@ -1,6 +1,7 @@
 package net.qpowei.tpitem.command;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +40,7 @@ public class LocationStringArgument implements ArgumentType<String> {
 
 	private static List<String> getSuggestionsList(CommandSource src) {
 		TeleportItemWorldSavedData savedData = TeleportItemWorldSavedData.get(src);
-		return savedData.pointsMap.keySet().stream().toList();
+		return savedData.pointsMap.keySet().stream().collect(Collectors.toList());
 	}
 
 	public static String getString(CommandContext<CommandSource> ctx, String name) {

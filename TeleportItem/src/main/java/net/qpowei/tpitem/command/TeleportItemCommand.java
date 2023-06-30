@@ -1,7 +1,5 @@
 package net.qpowei.tpitem.command;
 
-import java.util.Objects;
-
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.DimensionArgument;
@@ -21,6 +19,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.qpowei.tpitem.Location;
 import net.qpowei.tpitem.TeleportItemMain;
 import net.qpowei.tpitem.TeleportItemWorldSavedData;
+
+import com.google.common.base.MoreObjects;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -82,7 +82,7 @@ public class TeleportItemCommand {
 		Location location = TeleportItemWorldSavedData.get(ctx).
 			get(LocationStringArgument.getString(ctx, "name"));
 		TeleportItemMain.teleportEntity(
-			Objects.requireNonNullElse(entity, ctx.getSource().getEntity()), 
+			MoreObjects.firstNonNull(entity, ctx.getSource().getEntity()), 
 			location.getPos(), location.getWorld(ctx.getSource().getServer()));
 		return 1;
 	}
@@ -91,8 +91,8 @@ public class TeleportItemCommand {
 			throws CommandSyntaxException {
 		CommandSource src = ctx.getSource();
 		TeleportItemWorldSavedData.get(src).put(StringArgumentType.getString(ctx, "name"),
-				Objects.requireNonNullElse(pos, src.getEntity().blockPosition()),
-				Objects.requireNonNullElse(level, src.getLevel()));
+				MoreObjects.firstNonNull(pos, src.getEntity().blockPosition()),
+				MoreObjects.firstNonNull(level, src.getLevel()));
 		return 1;
 	}
 
