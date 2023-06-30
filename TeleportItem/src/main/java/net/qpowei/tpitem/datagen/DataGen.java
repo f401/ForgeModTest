@@ -1,8 +1,6 @@
 package net.qpowei.tpitem.datagen;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,14 +12,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.qpowei.tpitem.TeleportItemMain;
-import net.qpowei.tpitem.registries.ItemRegistry;
+import net.qpowei.tpitem.registries.TPItemRegistry;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGen {
@@ -37,7 +35,7 @@ public class DataGen {
 
 		@Override
 		protected void registerModels() {
-			Collection<RegistryObject<Item>> items = ItemRegistry.ITEM_REGISTER.getEntries();
+			Collection<RegistryObject<Item>> items = TPItemRegistry.ITEM_REGISTER.getEntries();
 			items.forEach((item) -> {
 				build(item.getId().getPath());
 			});
@@ -60,7 +58,7 @@ public class DataGen {
 
 		@Override
 		protected void registerStatesAndModels() {
-			reg(ItemRegistry.MY_BLOCK);
+			reg(TPItemRegistry.MY_BLOCK);
 		}
 
 		private <T extends Block> void reg(RegistryObject<T> reg) {
@@ -70,11 +68,24 @@ public class DataGen {
 		}
 	}
 
+	private static class LangProvider extends LanguageProvider {
+
+		public LangProvider(DataGenerator gen, String locale) {
+			super(gen, TeleportItemMain.MOD_ID, locale);
+		}
+
+		@Override
+		protected void addTranslations() {
+			add("cmd.tpitem.hello", "hello");
+		}
+	}
+
 	@SubscribeEvent
 	public static void registerEvent(GatherDataEvent event) {
 		event.getGenerator().addProvider(
 				new MyItemProvider(event.getGenerator(), event.getExistingFileHelper()));
 		event.getGenerator().addProvider(
 				new MyBlockStateAndModelProvider(event.getGenerator(), event.getExistingFileHelper()));
+		event.getGenerator().addProvider(new LangProvider(event.getGenerator(), "en_us"));
 	}
 }

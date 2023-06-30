@@ -9,7 +9,7 @@ import net.qpowei.tpitem.TeleportItemMain;
 import net.qpowei.tpitem.blocks.MyBlock;
 import net.qpowei.tpitem.items.TeleportItem;
 
-public class ItemRegistry {
+public class TPItemRegistry {
 	public static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS,
 			TeleportItemMain.MOD_ID);
 	public static final RegistryObject<TeleportItem> TELEPORYT_ITEM_OBJECT = ITEM_REGISTER.register("teleport_item",
