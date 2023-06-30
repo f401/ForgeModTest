@@ -5,11 +5,6 @@ import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.brigadier.tree.LiteralCommandNode;
-
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.impl.TeleportCommand;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
@@ -19,12 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.TicketType;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.qpowei.tpitem.registries.TPItemRegistry;
@@ -121,13 +113,4 @@ public class TeleportItemMain {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onServerStarting(RegisterCommandsEvent event) {
-		event.getDispatcher().register(Commands.literal(MOD_ID).then(
-				Commands.literal("test").requires((cmd) -> cmd.hasPermission(0))
-				.executes((ctx) -> {
-					ctx.getSource().sendSuccess(new TranslationTextComponent("cmd.tpitem.hello"), true);
-					return 1;
-				})));
-	}
 }

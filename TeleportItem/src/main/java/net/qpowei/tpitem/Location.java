@@ -14,6 +14,14 @@ public class Location implements INBTSerializable<CompoundNBT> {
 	private BlockPos pos;
 	private ResourceLocation dimension;
 
+	public BlockPos getPos() {
+		return pos;
+	}
+
+	public ResourceLocation getDimension() {
+		return dimension;
+	}
+
 	public Location(BlockPos pos, RegistryKey<World> dimension) {
 		this.pos = pos;
 		this.dimension = dimension.getRegistryName();
@@ -25,6 +33,14 @@ public class Location implements INBTSerializable<CompoundNBT> {
 
 	public ServerWorld getWorld(MinecraftServer server) {
 		return TeleportItemMain.getWorldFromRes(server, dimension);
+	}
+
+	public String getDimensionString() {
+		return dimension.toString();
+	}
+
+	public String getPosString() {
+		return pos.toString();
 	}
 
 	@Override

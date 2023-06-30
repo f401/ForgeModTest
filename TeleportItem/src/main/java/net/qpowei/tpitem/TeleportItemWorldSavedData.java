@@ -2,10 +2,14 @@ package net.qpowei.tpitem;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mojang.brigadier.context.CommandContext;
+
+import net.minecraft.command.CommandSource;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.math.BlockPos;
@@ -36,6 +40,14 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 		return savedDataManager.computeIfAbsent(TeleportItemWorldSavedData::new, NAME);
 	}
 
+	public static TeleportItemWorldSavedData get(CommandContext<CommandSource> ctx) {
+		return get(ctx.getSource().getLevel());
+	}
+
+	public static TeleportItemWorldSavedData get(CommandSource src) {
+		return get(src.getLevel());
+	}
+
 	public void put(String name, BlockPos pos, World world) {
 		put(name, pos, world.dimension());
 	}
@@ -43,15 +55,24 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 	public void put(String name, BlockPos pos, RegistryKey<World> dimension) {
 		put(name, new Location(pos, dimension));
 	}
-	
+
 	public void put(String name, Location location) {
 		LOGGER.info("Put {}: {}", name, location);
 		pointsMap.put(name, location);
+		setDirty();
 	}
-
 
 	public Location get(String name) {
 		return pointsMap.get(name);
+	}
+
+	public void remove(String name) {
+		pointsMap.remove(name);
+	}
+
+	public void forEach(Consumer<? super Map.Entry<String, Location>> action) {
+		pointsMap.entrySet().forEach(action);
+		setDirty();
 	}
 
 	@Override
@@ -70,4 +91,5 @@ public class TeleportItemWorldSavedData extends WorldSavedData {
 		}
 		return pCompound;
 	}
+
 }
