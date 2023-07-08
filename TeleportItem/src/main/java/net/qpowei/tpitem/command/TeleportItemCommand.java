@@ -91,7 +91,7 @@ public class TeleportItemCommand {
 			throws CommandSyntaxException {
 		CommandSource src = ctx.getSource();
 		TeleportItemWorldSavedData.get(src).put(StringArgumentType.getString(ctx, "name"),
-				MoreObjects.firstNonNull(pos, src.getEntity().blockPosition()),
+				MoreObjects.firstNonNull(pos, src.getEntityOrException().blockPosition()),
 				MoreObjects.firstNonNull(level, src.getLevel()));
 		return 1;
 	}

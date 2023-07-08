@@ -19,6 +19,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.qpowei.tpitem.TeleportItemMain;
+import net.qpowei.tpitem.command.TeleportItemCommand;
 import net.qpowei.tpitem.registries.TPItemRegistry;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -76,7 +77,10 @@ public class DataGen {
 
 		@Override
 		protected void addTranslations() {
-			add("cmd.tpitem.hello", "hello");
+			add(TeleportItemCommand.CMD_LIST_HEADER, "现在存在以下传送点: ");
+			add(TeleportItemCommand.CMD_LIST_INDIMENSION, "在维度: ");
+			add(TeleportItemCommand.CMD_LIST_POS, ", 位置: ");
+			add(TeleportItemCommand.CMD_NO_POINTS, "不存在任何位置。");
 		}
 	}
 
