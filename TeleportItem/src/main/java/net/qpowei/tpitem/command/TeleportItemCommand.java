@@ -27,7 +27,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import static net.qpowei.tpitem.TeleportItemMain.MOD_ID;
 
-@Mod.EventBusSubscriber(bus = Bus.MOD)
+@Mod.EventBusSubscriber
 public class TeleportItemCommand {
 	public static final String CMD_NO_POINTS = "cmd." + MOD_ID + ".nopoints";
 	public static final String CMD_LIST_HEADER = "cmd." + MOD_ID + ".listheaders";

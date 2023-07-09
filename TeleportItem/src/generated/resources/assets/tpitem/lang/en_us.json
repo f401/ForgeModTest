@@ -1,3 +1,6 @@
 {
-  "cmd.tpitem.hello": "hello"
+  "cmd.tpitem.indimension": "\u5728\u7EF4\u5EA6: ",
+  "cmd.tpitem.listheaders": "\u73B0\u5728\u5B58\u5728\u4EE5\u4E0B\u4F20\u9001\u70B9: ",
+  "cmd.tpitem.nopoints": "\u4E0D\u5B58\u5728\u4EFB\u4F55\u4F4D\u7F6E\u3002",
+  "cmd.tpitem.pos": ", \u4F4D\u7F6E: "
 }
