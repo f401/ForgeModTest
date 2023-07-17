@@ -39,35 +39,50 @@ public class TeleportItemCommand {
 		event.getDispatcher().register(Commands.literal(MOD_ID)
 				.requires((cmd) -> cmd.hasPermission(0))
 				.then(
-					Commands.literal("list").executes(TeleportItemCommand::performList))
+						Commands.literal("list").executes(TeleportItemCommand::performList))
 				.then(
-					Commands.literal("add")
-						.then(Commands.argument("name",
-								StringArgumentType.string()))
-						.executes((ctx) -> performAdd(ctx, null, null))
-						.then(Commands.argument("pos", Vec3Argument.vec3()))
-						.executes((ctx) -> performAdd(ctx, getPosition(ctx),
-								null))
-						.then(Commands.argument("dimension",
-								DimensionArgument.dimension()))
-						.executes((ctx) -> performAdd(ctx, getPosition(ctx),
-								DimensionArgument.getDimension(ctx,
-										"dimension"))))
+						Commands.literal("add")
+								.then(Commands.argument("name",
+										StringArgumentType.string())
+										.then(Commands.argument("pos",
+												Vec3Argument.vec3())
+												.then(Commands.argument(
+														"dimension",
+														DimensionArgument
+																.dimension())
+														.executes((ctx) -> performAdd(
+																ctx,
+																getPosition(ctx),
+																DimensionArgument
+																		.getDimension(ctx,
+																				"dimension")))))
+										.executes((ctx) -> performAdd(
+												ctx,
+												getPosition(ctx),
+												null)))
+								.executes((ctx) -> performAdd(ctx, null, null))
+
+				)
 				.then(
-					Commands.literal("remove")
-					.then(Commands.argument("name", LocationStringArgument.create()))
-					.executes((ctx) -> {
-						TeleportItemWorldSavedData.get(ctx)
-							.remove(LocationStringArgument.getString(ctx, "name"));
-						return 1;
-					})
-				).then(
-					Commands.literal("tp")
-					.then(Commands.argument("name", LocationStringArgument.create()))
-					.executes((ctx) -> performTeleport(ctx, null))
-					.then(Commands.argument("target", EntityArgument.entity()))
-					.executes((ctx) -> performTeleport(ctx, EntityArgument.getEntity(ctx, "target")))
-				));
+						Commands.literal("remove")
+								.then(Commands.argument("name",
+										LocationStringArgument.create()))
+								.executes((ctx) -> {
+									TeleportItemWorldSavedData.get(ctx)
+											.remove(LocationStringArgument
+													.getString(ctx, "name"));
+									return 1;
+								}))
+				.then(
+						Commands.literal("tp")
+								.then(Commands.argument("name",
+										LocationStringArgument.create())
+										.then(Commands.argument("target",
+												EntityArgument.entity()))
+										.executes((ctx) -> performTeleport(ctx,
+												EntityArgument
+														.getEntity(ctx, "target"))))
+								.executes((ctx) -> performTeleport(ctx, null))));
 	}
 
 	private static BlockPos toBlockPos(Vector3d vec) {
@@ -79,11 +94,11 @@ public class TeleportItemCommand {
 	}
 
 	private static int performTeleport(CommandContext<CommandSource> ctx, Entity entity) {
-		Location location = TeleportItemWorldSavedData.get(ctx).
-			get(LocationStringArgument.getString(ctx, "name"));
+		Location location = TeleportItemWorldSavedData.get(ctx)
+				.get(LocationStringArgument.getString(ctx, "name"));
 		TeleportItemMain.teleportEntity(
-			MoreObjects.firstNonNull(entity, ctx.getSource().getEntity()), 
-			location.getPos(), location.getWorld(ctx.getSource().getServer()));
+				MoreObjects.firstNonNull(entity, ctx.getSource().getEntity()),
+				location.getPos(), location.getWorld(ctx.getSource().getServer()));
 		return 1;
 	}
 
