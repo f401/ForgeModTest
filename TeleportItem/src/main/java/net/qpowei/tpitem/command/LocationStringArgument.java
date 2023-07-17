@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+import com.google.common.base.Strings;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -30,8 +31,7 @@ public class LocationStringArgument implements ArgumentType<String> {
 	/** Based on {@link ISuggestionProvider#matchesSubStr(String, String)} */
 	private static boolean matchStr(String input, String str) {
 		for (int i = 0; !str.startsWith(input, i); ++i) {
-			i = str.indexOf('_', i);
-			if (i < 0) {
+			if (i == str.length() - input.length()) { // string ring
 				return false;
 			}
 		}
@@ -55,7 +55,8 @@ public class LocationStringArgument implements ArgumentType<String> {
 		if (context.getSource() instanceof CommandSource) {
 			CommandSource src = (CommandSource) context.getSource();
 			for (String suggestion : getSuggestionsList(src)) {
-				if (matchStr(input, suggestion)) {
+				if (Strings.isNullOrEmpty(input) ||
+						matchStr(input, suggestion)) {
 					builder.suggest(suggestion);
 				}
 			}
@@ -67,6 +68,6 @@ public class LocationStringArgument implements ArgumentType<String> {
 
 	@Override
 	public String parse(StringReader reader) throws CommandSyntaxException {
-		return reader.readQuotedString();
+		return reader.readString();
 	}
 }

@@ -15,7 +15,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.qpowei.tpitem.Location;
 import net.qpowei.tpitem.TeleportItemMain;
 import net.qpowei.tpitem.TeleportItemWorldSavedData;
@@ -36,53 +35,41 @@ public class TeleportItemCommand {
 
 	@SubscribeEvent
 	public static void onServerStarting(RegisterCommandsEvent event) {
-		event.getDispatcher().register(Commands.literal(MOD_ID)
-				.requires((cmd) -> cmd.hasPermission(0))
-				.then(
-						Commands.literal("list").executes(TeleportItemCommand::performList))
-				.then(
-						Commands.literal("add")
-								.then(Commands.argument("name",
-										StringArgumentType.string())
-										.then(Commands.argument("pos",
-												Vec3Argument.vec3())
-												.then(Commands.argument(
-														"dimension",
-														DimensionArgument
-																.dimension())
-														.executes((ctx) -> performAdd(
-																ctx,
-																getPosition(ctx),
-																DimensionArgument
-																		.getDimension(ctx,
-																				"dimension")))))
-										.executes((ctx) -> performAdd(
-												ctx,
-												getPosition(ctx),
-												null)))
-								.executes((ctx) -> performAdd(ctx, null, null))
+		event.getDispatcher().register(
+				Commands.literal(MOD_ID)
+						.requires((cmd) -> cmd.hasPermission(0))
+						.then(
+								Commands.literal("list").executes(TeleportItemCommand::performList))
+						.then(
+								Commands.literal("add")
+										.then(Commands.argument("name", StringArgumentType.string())
+												.executes((ctx) -> performAdd(ctx, null, null))
+												.then(Commands.argument("pos", Vec3Argument.vec3())
+														.executes((ctx) -> performAdd(ctx, getPosition(ctx), null))
+														.then(Commands
+																.argument("dimension", DimensionArgument.dimension())
+																.executes((ctx) -> performAdd(ctx, getPosition(ctx),
+																		DimensionArgument.getDimension(ctx,
+																				"dimension"))))))
 
-				)
-				.then(
-						Commands.literal("remove")
-								.then(Commands.argument("name",
-										LocationStringArgument.create()))
-								.executes((ctx) -> {
-									TeleportItemWorldSavedData.get(ctx)
-											.remove(LocationStringArgument
-													.getString(ctx, "name"));
-									return 1;
-								}))
-				.then(
-						Commands.literal("tp")
-								.then(Commands.argument("name",
-										LocationStringArgument.create())
-										.then(Commands.argument("target",
-												EntityArgument.entity()))
-										.executes((ctx) -> performTeleport(ctx,
-												EntityArgument
-														.getEntity(ctx, "target"))))
-								.executes((ctx) -> performTeleport(ctx, null))));
+						)
+						.then(
+								Commands.literal("remove")
+										.then(Commands.argument("name", LocationStringArgument.create()))
+										.executes((ctx) -> {
+											TeleportItemWorldSavedData.get(ctx)
+													.remove(LocationStringArgument.getString(ctx, "name"));
+											return 1;
+										}))
+						.then(
+								Commands.literal("tp")
+										.then(Commands.argument("name",
+												LocationStringArgument.create())
+												.executes((ctx) -> performTeleport(ctx, null))
+												.then(Commands.argument("target",
+														EntityArgument.entity())
+														.executes((ctx) -> performTeleport(ctx,
+																EntityArgument.getEntity(ctx, "target")))))));
 	}
 
 	private static BlockPos toBlockPos(Vector3d vec) {
